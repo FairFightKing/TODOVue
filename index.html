@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="todos">
+    <section class="todoapp">
+        <div id="app">
+            <header class="header">
+                <h1>Todos</h1>
+                <input type="text" class="new-todo" placeholder="Ajouter une tache"
+                    @keydown.enter="addNewTask"
+                >
+            </header>
+            <div class="main">
+                <input type="checkbox" id="toggle-all" class="toggle-all" :checked="allTaskCompleted" @click="markAllAsComplete">
+                <label for="toggle-all">Mark all as complete</label>
+                <ul class="todo-list">
+
+                    <li v-for="(task, index) in tasks" class="todo"
+                        :class="task.status === false ? '' : 'completed'"
+                        v-show="
+                        !(
+                            (task.status === false && show === 'done')
+                            || (task.status === true && show === 'todo')
+                        )"
+                    >
+
+                        <task
+                                :name="task.name"
+                                :status="task.status"
+                                @suppress="tasks.splice(index, 1)"
+                                @check="task.status = !task.status"
+                        >
+
+                        </task>
+                        <!-- <input type="text" class="edit"> -->
+                    </li>
+
+                </ul>
+            </div>
+            <footer v-show="tasks.length > 0" class="footer">
+                <span class="todo-count"><strong>{{ taskNb }}</strong> tâches à faire</span>
+                <ul class="filters">
+                    <li v-for="(filter, index) in filters">
+                        <filterrow
+                        :name="filter.name"
+                        :status="filter.status"
+                        @activate="activated($event)"
+                        >
+
+                        </filterrow>
+                    </li>
+                </ul>
+                <button class="clear-completed"
+                @click="clearCompleted"
+                v-show="hasCompleted"
+                >Clear accomplished</button>
+            </footer>
+        </div>
+    </section>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
